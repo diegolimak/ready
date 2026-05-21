@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulador — AMIL Ready | Corretora Amor à Vida</title>
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1539990701043173');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1539990701043173&ev=PageView&noscript=1"
+/></noscript>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1E3A5F; --navy-dark:#152B47; --blue:#1B7DC4;
+  --blue-light:#7EC8E3; --blue-ice:#EAF5FB; --bg:#F5F4F0;
+  --border:rgba(30,58,95,0.12); --text:#3A4A5C; --muted:#7A8999;
+  --ok:#1a7a3a; --ok-bg:#e8f7ed; --err:#c0392b; --err-bg:#fdecea;
+  --warn-bg:#fff8e1;
+  --gold:#B45309; --gold-bg:#FEF3C7;
+  --silver:#6B7280; --silver-bg:#F3F4F6;
+  --plat:#7C6E9E; --plat-bg:#EDE9F6;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+/* ── TOPBAR ── */
+.topbar{background:var(--navy-dark);padding:14px 28px;display:flex;align-items:center;gap:16px;}
+.topbar img{height:40px;width:auto;filter:brightness(0) invert(1);}
+.topbar-title{font-family:'Nunito',sans-serif;font-weight:800;color:#fff;font-size:16px;}
+.topbar-sub{font-size:12px;color:rgba(255,255,255,.5);margin-top:2px;}
+
+/* ── WRAP ── */
+.wrap{max-width:900px;margin:0 auto;padding:28px 16px 60px;}
+
+/* ── STEPS ── */
+.steps{display:flex;margin-bottom:28px;background:#fff;border-radius:12px;overflow:hidden;border:1px solid var(--border);}
+.step-item{flex:1;padding:14px 8px;text-align:center;position:relative;}
+.step-item:not(:last-child)::after{content:'';position:absolute;right:0;top:50%;transform:translateY(-50%);width:1px;height:60%;background:var(--border);}
+.step-num{width:26px;height:26px;border-radius:50%;background:var(--border);color:var(--muted);font-family:'Nunito',sans-serif;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;margin:0 auto 4px;}
+.step-label{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em;}
+.step-item.active .step-num{background:var(--blue);color:#fff;}
+.step-item.active .step-label{color:var(--navy);}
+.step-item.done .step-num{background:var(--ok-bg);color:var(--ok);}
+.step-item.done .step-label{color:var(--ok);}
+
+/* ── CARD ── */
+.card{background:#fff;border-radius:14px;border:1px solid var(--border);padding:24px;margin-bottom:16px;}
+.card-title{font-family:'Nunito',sans-serif;font-weight:800;color:var(--navy);font-size:18px;margin-bottom:20px;display:flex;align-items:center;gap:10px;}
+.card-title .badge{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:3px 9px;border-radius:20px;background:var(--blue-ice);color:var(--blue);}
+.section-divider{border:none;border-top:1px solid var(--border);margin:20px 0;}
+.section-sub{font-family:'Nunito',sans-serif;font-weight:700;font-size:12px;color:var(--muted);margin-bottom:14px;text-transform:uppercase;letter-spacing:.08em;}
+
+/* ── FORM ── */
+label{display:block;font-size:12px;font-weight:600;color:var(--navy);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;}
+input[type=text],input[type=email],input[type=tel],input[type=date],input[type=number],select{
+  width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:8px;
+  font-family:'Inter',sans-serif;font-size:14px;color:var(--navy);background:#fff;
+  transition:border .15s;outline:none;
+}
+input[type=text]:focus,input[type=email]:focus,input[type=tel]:focus,
+input[type=date]:focus,input[type=number]:focus,select:focus{border-color:var(--blue);}
+input.invalid{border-color:var(--err)!important;background:var(--err-bg);}
+input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;}
+input[type=number]{-moz-appearance:textfield;}
+.field{margin-bottom:18px;}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.field-row-3{display:grid;grid-template-columns:2fr 1fr 1fr;gap:16px;}
+@media(max-width:580px){.field-row,.field-row-3{grid-template-columns:1fr;}}
+.field-hint{font-size:11px;color:var(--muted);margin-top:5px;}
+.field-err{font-size:11px;color:var(--err);margin-top:5px;display:none;}
+.field-err.show{display:block;}
+.age-tag{display:inline-flex;align-items:center;background:var(--blue-ice);color:var(--blue);font-family:'Nunito',sans-serif;font-weight:700;font-size:12px;padding:3px 10px;border-radius:20px;margin-top:6px;}
+.age-tag.hidden{display:none;}
+
+/* ── PLAN CARDS ── */
+.plans-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:10px;}
+.plan-card{border:2px solid var(--border);border-radius:12px;padding:16px 14px;cursor:pointer;transition:all .15s;background:#fff;position:relative;display:flex;flex-direction:column;gap:6px;}
+.plan-card:hover{border-color:var(--blue);box-shadow:0 4px 16px rgba(27,125,196,.1);}
+.plan-card.selected{border-color:var(--blue);background:var(--blue-ice);}
+.plan-tier{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;padding:3px 8px;border-radius:6px;display:inline-block;width:fit-content;}
+.tier-s750{background:var(--navy);color:#fff;}
+.tier-platinum{background:var(--plat-bg);color:var(--plat);}
+.tier-s450{background:var(--blue-ice);color:var(--blue);}
+.tier-ouro{background:var(--gold-bg);color:var(--gold);}
+.tier-prata{background:var(--silver-bg);color:var(--silver);}
+.plan-name{font-family:'Nunito',sans-serif;font-weight:900;font-size:17px;color:var(--navy);}
+.plan-price{font-family:'Nunito',sans-serif;font-weight:900;font-size:20px;color:var(--blue);margin-top:4px;line-height:1;}
+.plan-price-label{font-size:10px;color:var(--muted);}
+.plan-hosps{font-size:11px;color:var(--muted);margin-top:4px;}
+.plan-reemb{font-size:11px;margin-top:4px;font-weight:600;}
+.plan-reemb.has-reemb{color:var(--ok);}
+.plan-reemb.no-reemb{color:var(--muted);}
+.plan-check{position:absolute;top:10px;right:10px;width:20px;height:20px;border-radius:50%;background:var(--blue);display:none;align-items:center;justify-content:center;}
+.plan-check svg{width:11px;height:11px;fill:#fff;}
+.plan-card.selected .plan-check{display:flex;}
+
+/* ── REDE NOVA ── */
+.rede-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
+.rede-title{font-family:'Nunito',sans-serif;font-weight:800;font-size:15px;color:var(--navy);}
+.rede-count{font-size:12px;color:var(--muted);background:var(--bg);padding:4px 10px;border-radius:20px;}
+.region-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;}
+.region-chip{padding:6px 13px;border-radius:20px;border:1.5px solid var(--border);background:#fff;
+  font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;color:var(--muted);white-space:nowrap;}
+.region-chip:hover{border-color:var(--blue);color:var(--navy);}
+.region-chip.active{border-color:var(--blue);background:var(--blue-ice);color:var(--navy);}
+.region-groups{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+@media(max-width:540px){.region-groups{grid-template-columns:1fr;}}
+.region-group{background:var(--bg);border-radius:10px;padding:12px 14px;}
+.region-group.full-width{grid-column:1/-1;}
+.region-group-name{font-family:'Nunito',sans-serif;font-weight:800;font-size:12px;color:var(--navy);
+  text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.region-group-name .ri{font-size:14px;}
+.hosp-list{display:flex;flex-direction:column;gap:5px;}
+.hosp-item{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--text);}
+.hosp-item .hi-icon{width:20px;height:20px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;}
+.hosp-item.hospital .hi-icon{background:#dbeafe;color:#1d4ed8;}
+.hosp-item.lab .hi-icon{background:var(--ok-bg);color:var(--ok);}
+.rede-empty{text-align:center;padding:20px;color:var(--muted);font-size:13px;}
+
+/* ── COMPARE TABLE ── */
+.compare-wrap{overflow-x:auto;margin-top:4px;}
+table.compare{width:100%;border-collapse:collapse;font-size:12px;}
+table.compare th{background:var(--bg);color:var(--muted);font-weight:600;font-size:11px;
+  text-transform:uppercase;letter-spacing:.06em;padding:8px 10px;text-align:left;border-bottom:1px solid var(--border);}
+table.compare td{padding:8px 10px;border-bottom:1px solid var(--border);color:var(--text);}
+table.compare tr:last-child td{border-bottom:none;}
+table.compare td.val{font-family:'Nunito',sans-serif;font-weight:700;color:var(--navy);text-align:right;}
+table.compare td.green{color:var(--ok);font-weight:600;}
+table.compare td.muted{color:var(--muted);}
+
+/* ── DEPENDENTES ── */
+.dep-card{background:var(--bg);border-radius:10px;padding:16px;margin-bottom:12px;position:relative;}
+.dep-card-title{font-family:'Nunito',sans-serif;font-weight:700;font-size:13px;color:var(--navy);margin-bottom:12px;}
+.dep-remove{position:absolute;top:12px;right:12px;background:none;border:1px solid var(--border);border-radius:6px;padding:4px 8px;cursor:pointer;font-size:11px;color:var(--muted);}
+.dep-remove:hover{border-color:var(--err);color:var(--err);}
+.dep-price{font-family:'Nunito',sans-serif;font-weight:800;font-size:16px;color:var(--blue);margin-top:8px;}
+
+/* ── BUTTONS ── */
+.btn{font-family:'Nunito',sans-serif;font-weight:800;font-size:15px;padding:13px 28px;border-radius:10px;cursor:pointer;border:none;transition:all .15s;}
+.btn-primary{background:var(--blue);color:#fff;}
+.btn-primary:hover{background:#1567a8;}
+.btn-primary:disabled{background:#b0c4d8;cursor:not-allowed;}
+.btn-outline{background:#fff;color:var(--navy);border:2px solid var(--border);}
+.btn-outline:hover{border-color:var(--blue);color:var(--blue);}
+.btn-add{background:var(--blue-ice);color:var(--blue);border:1.5px dashed var(--blue);border-radius:10px;padding:12px;width:100%;font-family:'Nunito',sans-serif;font-weight:700;font-size:14px;cursor:pointer;}
+.btn-add:hover{background:#d4eaf8;}
+.btn-row{display:flex;gap:12px;justify-content:flex-end;margin-top:20px;}
+
+/* ── RESUMO ── */
+.resumo-header{background:linear-gradient(135deg,var(--navy-dark),var(--blue));border-radius:12px;padding:20px;color:#fff;margin-bottom:16px;}
+.resumo-nome{font-family:'Nunito',sans-serif;font-weight:900;font-size:22px;}
+.resumo-plano{font-size:14px;color:rgba(255,255,255,.75);margin-top:4px;}
+.resumo-total{font-family:'Nunito',sans-serif;font-weight:900;font-size:30px;margin-top:12px;}
+.resumo-total span{font-size:14px;font-weight:600;opacity:.7;}
+.resumo-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);font-size:14px;}
+.resumo-row:last-child{border-bottom:none;}
+.resumo-row .rr-label{color:var(--text);}
+.resumo-row .rr-val{font-family:'Nunito',sans-serif;font-weight:700;color:var(--navy);}
+
+.disclaimer{background:var(--warn-bg);border:1px solid #ffe082;border-radius:8px;padding:12px 16px;font-size:12px;color:#795548;margin-top:12px;}
+
+.success{text-align:center;padding:40px 20px;}
+.success-icon{width:64px;height:64px;border-radius:50%;background:var(--ok-bg);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:32px;}
+.success h2{font-family:'Nunito',sans-serif;font-weight:900;font-size:24px;color:var(--navy);margin-bottom:8px;}
+.success p{color:var(--muted);font-size:14px;}
+.hidden{display:none;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <img src="Manual da Marca AMV/Corretora Amor _ Vida/assets/logo-horizontal-branca.png" alt="Amor à Vida"
+       onerror="this.src='https://corretoraamoravida.com.br/wp-content/uploads/2023/04/logo-amor-a-vida.svg'">
+  <div>
+    <div class="topbar-title">Simulador AMIL Ready</div>
+    <div class="topbar-sub">Corretora Amor à Vida · 30 a 99 vidas</div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="steps" id="steps">
+    <div class="step-item active" data-s="1"><div class="step-num">1</div><div class="step-label">Titular</div></div>
+    <div class="step-item" data-s="2"><div class="step-num">2</div><div class="step-label">Plano</div></div>
+    <div class="step-item" data-s="3"><div class="step-num">3</div><div class="step-label">Dependentes</div></div>
+    <div class="step-item" data-s="4"><div class="step-num">4</div><div class="step-label">Resumo</div></div>
+  </div>
+
+  <!-- ═══════ STEP 1 ═══════ -->
+  <div id="s1">
+    <div class="card">
+      <div class="card-title">Dados do Titular</div>
+
+      <div class="field">
+        <label>Nome completo *</label>
+        <input type="text" id="nome" placeholder="Ex: Maria Fernanda da Silva" autocomplete="name">
+        <div class="field-err" id="err-nome">Por favor, informe o nome completo.</div>
+      </div>
+
+      <hr class="section-divider">
+      <div class="section-sub">Perfil de saúde</div>
+
+      <div class="field-row-3">
+        <div class="field">
+          <label>Data de nascimento *</label>
+          <input type="date" id="dataNasc" max="">
+          <div class="age-tag hidden" id="age-tag-titular"></div>
+          <div class="field-err" id="err-dataNasc">Informe uma data de nascimento válida.</div>
+        </div>
+        <div class="field">
+          <label>Peso (kg) *</label>
+          <input type="number" id="peso" placeholder="Ex: 75" min="1" max="300" step="0.1">
+          <div class="field-hint">Use ponto para decimais.</div>
+          <div class="field-err" id="err-peso">Informe entre 1 e 300 kg.</div>
+        </div>
+        <div class="field">
+          <label>Altura (cm) *</label>
+          <input type="number" id="altura" placeholder="Ex: 175" min="30" max="250" step="1">
+          <div class="field-err" id="err-altura">Informe entre 30 e 250 cm.</div>
+        </div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="goStep(2)">Próximo →</button>
+    </div>
+  </div>
+
+  <!-- ═══════ STEP 2 ═══════ -->
+  <div id="s2" class="hidden">
+    <div class="card">
+      <div class="card-title">Escolha o Plano <span class="badge" id="faixa-badge"></span></div>
+      <div class="plans-grid" id="plans-grid"></div>
+
+      <!-- Comparativo de reembolso -->
+      <div id="compare-section" class="hidden" style="margin-top:20px;">
+        <hr class="section-divider" style="margin-bottom:16px;">
+        <div class="section-sub">Reembolso para consultas médicas</div>
+        <div class="compare-wrap">
+          <table class="compare">
+            <thead><tr><th>Plano</th><th style="text-align:right">Valor máximo por consulta</th></tr></thead>
+            <tbody>
+              <tr><td>S750</td><td class="val green">R$ 95,20</td></tr>
+              <tr><td>Platinum</td><td class="val green">R$ 168,00</td></tr>
+              <tr><td>S450</td><td class="val green">R$ 67,20</td></tr>
+              <tr><td>Ouro</td><td class="val green">R$ 56,00</td></tr>
+              <tr><td>Prata</td><td class="muted">Não incluso</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- REDE CREDENCIADA -->
+    <div class="card hidden" id="rede-card">
+      <div class="rede-header">
+        <div class="rede-title">Rede Credenciada</div>
+        <div class="rede-count" id="rede-count"></div>
+      </div>
+      <div class="region-chips" id="region-chips"></div>
+      <div class="region-groups" id="region-groups"></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-outline" onclick="goStep(1)">← Voltar</button>
+      <button class="btn btn-primary" onclick="goStep(3)">Próximo →</button>
+    </div>
+  </div>
+
+  <!-- ═══════ STEP 3 ═══════ -->
+  <div id="s3" class="hidden">
+    <div class="card">
+      <div class="card-title">Dependentes</div>
+      <div id="deps-list"></div>
+      <button class="btn-add" onclick="addDep()">+ Adicionar dependente</button>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-outline" onclick="goStep(2)">← Voltar</button>
+      <button class="btn btn-primary" onclick="goStep(4)">Ver Resumo →</button>
+    </div>
+  </div>
+
+  <!-- ═══════ STEP 4 ═══════ -->
+  <div id="s4" class="hidden">
+    <div id="resumo-content"></div>
+    <div class="disclaimer">⚠️ Os valores apresentados podem sofrer alterações sem aviso prévio. Esta simulação tem caráter informativo.</div>
+    <div class="btn-row">
+      <button class="btn btn-outline" onclick="goStep(3)">← Voltar</button>
+      <button class="btn btn-primary" id="btn-enviar" onclick="enviar()">Enviar Simulação</button>
+    </div>
+  </div>
+
+  <!-- SUCCESS -->
+  <div id="s-success" class="card hidden">
+    <div class="success">
+      <div class="success-icon">✓</div>
+      <h2>Obrigado</h2>
+      <p></p>
+      <br>
+      <button class="btn btn-primary" onclick="location.reload()">Nova simulação</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ─────────────────────────────────────────────
+   GOOGLE APPS SCRIPT — cole em Extensões > Apps Script
+   ─────────────────────────────────────────────
+   function doGet(e){return ContentService.createTextOutput(JSON.stringify({status:"ok"})).setMimeType(ContentService.MimeType.JSON);}
+   function doPost(e){
+     try{
+       const sheet=SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Respostas");
+       const d=JSON.parse(e.parameter.data), qtd=parseInt(d.qtdDependentes)||0;
+       const row=[new Date().toLocaleString('pt-BR'),d.nome,
+         d.dataNasc,d.idadeTitular,d.faixaTitular,d.pesoTitular,d.alturaTitular,
+         d.imcTitular,d.classImcTitular,d.plano,d.cobertura,d.valorTitular,d.totalMensal,qtd];
+       for(let i=1;i<=qtd;i++){row.push(
+         d[`dep${i}_nome`],d[`dep${i}_parentesco`],d[`dep${i}_dataNasc`],
+         d[`dep${i}_idade`],d[`dep${i}_faixa`],d[`dep${i}_peso`],d[`dep${i}_altura`],
+         d[`dep${i}_imc`],d[`dep${i}_classImc`],d[`dep${i}_valor`]);}
+       sheet.appendRow(row);
+       return ContentService.createTextOutput(JSON.stringify({status:"ok"})).setMimeType(ContentService.MimeType.JSON);
+     }catch(err){return ContentService.createTextOutput(JSON.stringify({status:"erro",msg:err.toString()})).setMimeType(ContentService.MimeType.JSON);}
+   }
+   ───────────────────────────────────────────── */
+
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz2x9_VEdLU4JSeMqlmGlL6fDBexUXtO6PulAxNjK1Of-XjwBXNMrV6VLx6pEam7tFaaw/exec';
+
+/* ══════════════════════════════════════════════
+   PLANOS AMIL READY — 30 a 99 vidas
+   Fonte: READY - REDE CREDENCIADA.xlsx
+══════════════════════════════════════════════ */
+const PLANOS = {
+  s750:{
+    nome:'S750', tier:'s750', cob:'Regional', reembolso:'R$ 95,20 por consulta',
+    v:{'0 a 18':380.39,'19 a 23':445.06,'24 a 28':542.97,'29 a 33':651.56,
+       '34 a 38':684.14,'39 a 43':752.55,'44 a 48':940.69,'49 a 53':1034.76,
+       '54 a 58':1293.45,'59+':2263.54}
+  },
+  platinum:{
+    nome:'Platinum', tier:'platinum', cob:'Regional', reembolso:'R$ 168,00 por consulta',
+    v:{'0 a 18':332.69,'19 a 23':389.25,'24 a 28':474.89,'29 a 33':569.87,
+       '34 a 38':598.36,'39 a 43':658.20,'44 a 48':822.75,'49 a 53':905.03,
+       '54 a 58':1131.29,'59+':1979.76}
+  },
+  s450:{
+    nome:'S450', tier:'s450', cob:'Regional', reembolso:'R$ 67,20 por consulta',
+    v:{'0 a 18':322.85,'19 a 23':377.73,'24 a 28':460.83,'29 a 33':553.00,
+       '34 a 38':580.65,'39 a 43':638.72,'44 a 48':798.40,'49 a 53':878.24,
+       '54 a 58':1097.80,'59+':1921.15}
+  },
+  ouro:{
+    nome:'Ouro', tier:'ouro', cob:'Regional', reembolso:'R$ 56,00 por consulta',
+    v:{'0 a 18':282.36,'19 a 23':330.36,'24 a 28':403.04,'29 a 33':483.65,
+       '34 a 38':507.83,'39 a 43':558.61,'44 a 48':698.26,'49 a 53':768.09,
+       '54 a 58':960.11,'59+':1680.19}
+  },
+  prata:{
+    nome:'Prata', tier:'prata', cob:'Regional', reembolso:'Sem reembolso',
+    v:{'0 a 18':253.09,'19 a 23':296.12,'24 a 28':361.27,'29 a 33':433.52,
+       '34 a 38':455.20,'39 a 43':500.72,'44 a 48':625.90,'49 a 53':688.49,
+       '54 a 58':860.61,'59+':1506.07}
+  }
+};
+
+/* ══════════════════════════════════════════════
+   REDE CREDENCIADA
+   Fonte: AMIL - COMPARATIVO DE REDE CREDENCIADA READY.xlsx
+══════════════════════════════════════════════ */
+const REDE = [
+  {reg:'Águas Claras',  hosp:'Águas Claras',          tipo:'hospital', s750:1,platinum:1,s450:1,ouro:1,prata:1},
+  {reg:'Asa Norte',     hosp:'Santa Helena',           tipo:'hospital', s750:1,platinum:0,s450:1,ouro:0,prata:0},
+  {reg:'Asa Norte',     hosp:'Santa Lucia Norte',      tipo:'hospital', s750:1,platinum:1,s450:1,ouro:1,prata:1},
+  {reg:'Asa Sul',       hosp:'Santa Luzia',            tipo:'hospital', s750:1,platinum:0,s450:0,ouro:0,prata:0},
+  {reg:'Asa Sul',       hosp:'Alvorada',               tipo:'hospital', s750:1,platinum:1,s450:1,ouro:1,prata:1},
+  {reg:'Asa Sul',       hosp:'Home',                   tipo:'hospital', s750:1,platinum:1,s450:1,ouro:1,prata:0},
+  {reg:'Asa Sul',       hosp:'Santa Lucia Sul',        tipo:'hospital', s750:1,platinum:1,s450:1,ouro:1,prata:0},
+  {reg:'Asa Sul',       hosp:'Pacini',                 tipo:'hospital', s750:0,platinum:0,s450:0,ouro:1,prata:1},
+  {reg:'Asa Sul',       hosp:'HOB',                    tipo:'hospital', s750:1,platinum:1,s450:1,ouro:1,prata:1},
+  {reg:'Asa Sul',       hosp:'Hospital PAI',           tipo:'hospital', s750:1,platinum:1,s450:1,ouro:1,prata:1},
+  {reg:'Ceilândia',     hosp:'Anchieta Ceilândia',     tipo:'hospital', s750:1,platinum:1,s450:1,ouro:1,prata:1},
+  {reg:'Cruzeiro',      hosp:'São Mateus',             tipo:'hospital', s750:1,platinum:1,s450:1,ouro:1,prata:0},
+  {reg:'Gama',          hosp:'Santa Lucia Gama',       tipo:'hospital', s750:1,platinum:1,s450:1,ouro:1,prata:1},
+  {reg:'Lago Sul',      hosp:'Hospital Brasília',      tipo:'hospital', s750:1,platinum:1,s450:1,ouro:1,prata:1},
+  {reg:'Lago Sul',      hosp:'DAHER',                  tipo:'hospital', s750:1,platinum:1,s450:1,ouro:1,prata:1},
+  {reg:'Lago Sul',      hosp:'Hospital Urológico',     tipo:'hospital', s750:1,platinum:1,s450:0,ouro:0,prata:0},
+  {reg:'Sudoeste',      hosp:'Maternidade Brasília',   tipo:'hospital', s750:1,platinum:1,s450:1,ouro:1,prata:1},
+  {reg:'Tag. Norte',    hosp:'Anchieta',               tipo:'hospital', s750:1,platinum:1,s450:0,ouro:0,prata:0},
+  {reg:'Tag. Sul',      hosp:'Hospital Mantevida',     tipo:'hospital', s750:1,platinum:1,s450:1,ouro:1,prata:1},
+  {reg:'Tag. Sul',      hosp:'Santa Lucia Pistão Sul', tipo:'hospital', s750:1,platinum:1,s450:1,ouro:1,prata:1},
+  {reg:'Tag. Sul',      hosp:'Santa Marta',            tipo:'hospital', s750:1,platinum:1,s450:1,ouro:1,prata:0},
+  {reg:'Todo o DF',     hosp:'Laboratório Sabin',      tipo:'lab',      s750:1,platinum:1,s450:1,ouro:1,prata:1},
+  {reg:'Todo o DF',     hosp:'Laboratório Exame',      tipo:'lab',      s750:1,platinum:1,s450:1,ouro:1,prata:1},
+];
+
+/* ══════════════════════════════════════════════
+   CÁLCULOS
+══════════════════════════════════════════════ */
+function calcIdade(d) {
+  const n = new Date(d), h = new Date();
+  if (isNaN(n)) return null;
+  let a = h.getFullYear() - n.getFullYear();
+  const m = h.getMonth() - n.getMonth();
+  if (m < 0 || (m === 0 && h.getDate() < n.getDate())) a--;
+  return a >= 0 && a <= 120 ? a : null;
+}
+
+function calcFaixa(idade) {
+  if (idade === null) return '';
+  if (idade <= 18)  return '0 a 18';
+  if (idade <= 23)  return '19 a 23';
+  if (idade <= 28)  return '24 a 28';
+  if (idade <= 33)  return '29 a 33';
+  if (idade <= 38)  return '34 a 38';
+  if (idade <= 43)  return '39 a 43';
+  if (idade <= 48)  return '44 a 48';
+  if (idade <= 53)  return '49 a 53';
+  if (idade <= 58)  return '54 a 58';
+  return '59+';
+}
+
+function calcIMC(kg, cm) {
+  if (!kg || !cm || cm <= 0) return null;
+  return kg / Math.pow(cm / 100, 2);
+}
+
+function classIMC(imc) {
+  if (imc === null) return '';
+  if (imc < 18.5)  return 'Abaixo do peso';
+  if (imc < 25.0)  return 'Peso normal';
+  if (imc < 30.0)  return 'Sobrepeso';
+  if (imc < 35.0)  return 'Obesidade Grau I';
+  if (imc < 40.0)  return 'Obesidade Grau II';
+  return 'Obesidade Grau III (Mórbida)';
+}
+
+function fmt(v) {
+  if (v == null) return '—';
+  return 'R$ ' + v.toFixed(2).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+}
+function fmtN(v) { return v != null ? v.toFixed(2).replace('.', ',') : ''; }
+
+/* ══════════════════════════════════════════════
+   ESTADO
+══════════════════════════════════════════════ */
+let state = { step: 1, planoKey: null, deps: [] };
+let redeFilter = 'todas';
+const PARENTESCOS = ['Cônjuge','Filho(a)','Pai','Mãe','Enteado(a)','Outro'];
+
+window.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('dataNasc').max = new Date().toISOString().split('T')[0];
+
+  document.getElementById('dataNasc').addEventListener('change', function () {
+    const tag = document.getElementById('age-tag-titular');
+    const idade = calcIdade(this.value);
+    if (idade !== null) { tag.textContent = idade + ' anos'; tag.classList.remove('hidden'); }
+    else tag.classList.add('hidden');
+  });
+});
+
+/* ══════════════════════════════════════════════
+   NAVEGAÇÃO
+══════════════════════════════════════════════ */
+function goStep(n) {
+  if (n === 2) { if (!validateStep1()) return; fbq('track', 'ViewContent'); }
+  if (n === 3 && !state.planoKey) { alert('Selecione um plano antes de continuar.'); return; }
+
+  ['s1','s2','s3','s4','s-success'].forEach(id => document.getElementById(id).classList.add('hidden'));
+  document.getElementById('s' + n).classList.remove('hidden');
+  state.step = n;
+  updateSteps();
+
+  if (n === 2) renderStep2();
+  if (n === 3) renderDeps();
+  if (n === 4) renderResumo();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updateSteps() {
+  document.querySelectorAll('.step-item').forEach(el => {
+    const s = +el.dataset.s;
+    el.classList.remove('active', 'done');
+    if (s === state.step) el.classList.add('active');
+    else if (s < state.step) el.classList.add('done');
+  });
+}
+
+/* ══════════════════════════════════════════════
+   VALIDAÇÃO
+══════════════════════════════════════════════ */
+function showErr(id, on) {
+  const e = document.getElementById('err-' + id);
+  const i = document.getElementById(id);
+  if (e) e.classList.toggle('show', on);
+  if (i) i.classList.toggle('invalid', on);
+}
+
+function validateStep1() {
+  let ok = true;
+  if (document.getElementById('nome').value.trim().length < 3) { showErr('nome', true); ok = false; } else showErr('nome', false);
+  const dn = document.getElementById('dataNasc').value;
+  if (!dn || calcIdade(dn) === null) { showErr('dataNasc', true); ok = false; } else showErr('dataNasc', false);
+  const p = parseFloat(document.getElementById('peso').value);
+  if (!p || p < 1 || p > 300) { showErr('peso', true); ok = false; } else showErr('peso', false);
+  const a = parseFloat(document.getElementById('altura').value);
+  if (!a || a < 30 || a > 250) { showErr('altura', true); ok = false; } else showErr('altura', false);
+  if (!ok) document.querySelector('.invalid')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  return ok;
+}
+
+/* ══════════════════════════════════════════════
+   STEP 2 — PLANOS
+══════════════════════════════════════════════ */
+function renderStep2() {
+  renderPlans();
+  document.getElementById('compare-section').classList.remove('hidden');
+}
+
+function renderPlans() {
+  const faixa = calcFaixa(calcIdade(document.getElementById('dataNasc').value));
+  document.getElementById('faixa-badge').textContent = faixa || '—';
+  const grid = document.getElementById('plans-grid');
+  grid.innerHTML = '';
+
+  Object.entries(PLANOS).forEach(([key, p]) => {
+    const preco = p.v[faixa] || 0;
+    const hospsCount = REDE.filter(r => r[key] === 1).length;
+    const sel = state.planoKey === key;
+    const hasReemb = p.reembolso !== 'Sem reembolso';
+    const div = document.createElement('div');
+    div.className = 'plan-card' + (sel ? ' selected' : '');
+    div.onclick = () => selectPlan(key);
+    div.innerHTML = `
+      <div class="plan-tier tier-${p.tier}">${p.nome}</div>
+      <div class="plan-name">${p.nome}</div>
+      <div class="plan-price">${fmt(preco)}</div>
+      <div class="plan-price-label">por mês / vida · ${p.cob}</div>
+      <div class="plan-hosps">${hospsCount} unidades credenciadas</div>
+      <div class="plan-reemb ${hasReemb ? 'has-reemb' : 'no-reemb'}">${hasReemb ? '↩ ' + p.reembolso : 'Sem reembolso'}</div>
+      <div class="plan-check"><svg viewBox="0 0 12 10"><polyline points="1,5 4,8 11,1" stroke="#fff" stroke-width="2" fill="none"/></svg></div>
+    `;
+    grid.appendChild(div);
+  });
+}
+
+function selectPlan(key) {
+  state.planoKey = key;
+  redeFilter = 'todas';
+  renderPlans();
+  renderRede(key);
+  fbq('track', 'CustomizeProduct', { content_name: PLANOS[key].nome, content_category: 'AMIL Ready' });
+}
+
+/* ══════════════════════════════════════════════
+   REDE CREDENCIADA — NOVA UX
+══════════════════════════════════════════════ */
+function renderRede(key) {
+  const card = document.getElementById('rede-card');
+  card.classList.remove('hidden');
+
+  const covered = REDE.filter(r => r[key] === 1);
+  const mainRegs = [...new Set(covered.filter(r => r.reg !== 'Todo o DF').map(r => r.reg))];
+  const total = covered.length;
+
+  document.getElementById('rede-count').textContent =
+    `${total} unidades · ${mainRegs.length} regiões`;
+
+  /* chips de região */
+  const chips = ['todas', ...mainRegs].map(r => {
+    const label = r === 'todas' ? 'Todas' : r;
+    return `<div class="region-chip ${redeFilter === r ? 'active' : ''}" onclick="setRedeFilter('${r}','${key}')">${label}</div>`;
+  }).join('');
+  document.getElementById('region-chips').innerHTML = chips;
+
+  renderRedeGroups(key, covered, mainRegs);
+}
+
+function renderRedeGroups(key, covered, mainRegs) {
+  const wrap = document.getElementById('region-groups');
+  const labs = covered.filter(r => r.reg === 'Todo o DF');
+  const filtered = redeFilter === 'todas' ? mainRegs : mainRegs.filter(r => r === redeFilter);
+
+  if (!filtered.length && !labs.length) {
+    wrap.innerHTML = '<div class="rede-empty">Nenhuma unidade encontrada para esta seleção.</div>';
+    return;
+  }
+
+  let html = '';
+  filtered.forEach(reg => {
+    const hosps = covered.filter(r => r.reg === reg);
+    const items = hosps.map(h => `
+      <div class="hosp-item hospital">
+        <div class="hi-icon">🏥</div>
+        <span>${h.hosp}</span>
+      </div>`).join('');
+    html += `<div class="region-group"><div class="region-group-name">${reg}</div><div class="hosp-list">${items}</div></div>`;
+  });
+
+  /* Laboratórios aparecem sempre (só quando "todas" ou quando a região está selecionada e há labs nela) */
+  if (labs.length && (redeFilter === 'todas')) {
+    const items = labs.map(h => `
+      <div class="hosp-item lab">
+        <div class="hi-icon">🔬</div>
+        <span>${h.hosp}</span>
+      </div>`).join('');
+    html += `<div class="region-group full-width"><div class="region-group-name">Laboratórios — Todo o DF</div><div class="hosp-list">${items}</div></div>`;
+  }
+
+  wrap.innerHTML = html;
+}
+
+function setRedeFilter(reg, key) {
+  redeFilter = reg;
+  const covered = REDE.filter(r => r[key] === 1);
+  const mainRegs = [...new Set(covered.filter(r => r.reg !== 'Todo o DF').map(r => r.reg))];
+
+  /* atualiza chips */
+  document.querySelectorAll('.region-chip').forEach(el => {
+    el.classList.toggle('active', el.textContent === (reg === 'todas' ? 'Todas' : reg));
+  });
+
+  renderRedeGroups(key, covered, mainRegs);
+}
+
+/* ══════════════════════════════════════════════
+   DEPENDENTES — STEP 3
+══════════════════════════════════════════════ */
+function addDep() { state.deps.push({ nome:'', parentesco:'', dataNasc:'', peso:'', altura:'' }); renderDeps(); }
+function removeDep(i) { state.deps.splice(i, 1); renderDeps(); }
+function setDep(i, f, v) {
+  state.deps[i][f] = v;
+  if (f === 'dataNasc') {
+    const tag = document.getElementById(`age-dep-${i}`);
+    const idade = calcIdade(v);
+    if (tag) { tag.textContent = idade !== null ? idade + ' anos' : ''; tag.classList.toggle('hidden', idade === null); }
+    updateDepPrice(i);
+  }
+  if (f === 'peso' || f === 'altura') updateDepPrice(i);
+}
+function updateDepPrice(i) {
+  const d = state.deps[i];
+  const faixa = calcFaixa(calcIdade(d.dataNasc));
+  const p = PLANOS[state.planoKey];
+  const v = faixa && p ? p.v[faixa] || 0 : 0;
+  const el = document.getElementById(`dep-price-${i}`);
+  if (el) el.textContent = v > 0 ? fmt(v) + ' / mês' : '';
+}
+
+function renderDeps() {
+  const list = document.getElementById('deps-list');
+  const hoje = new Date().toISOString().split('T')[0];
+  if (!state.deps.length) {
+    list.innerHTML = '<p style="color:var(--muted);font-size:13px;margin-bottom:16px">Nenhum dependente adicionado. Clique no botão abaixo para adicionar.</p>';
+    return;
+  }
+  list.innerHTML = state.deps.map((d, i) => {
+    const p = PLANOS[state.planoKey];
+    const faixa = calcFaixa(calcIdade(d.dataNasc));
+    const preco = faixa && p ? p.v[faixa] || 0 : 0;
+    const idade = calcIdade(d.dataNasc);
+    const ptOpts = PARENTESCOS.map(pt => `<option value="${pt}" ${d.parentesco===pt?'selected':''}>${pt}</option>`).join('');
+    return `<div class="dep-card">
+      <div class="dep-card-title">Dependente ${i + 1}</div>
+      <button class="dep-remove" onclick="removeDep(${i})">Remover</button>
+      <div class="field-row">
+        <div class="field"><label>Nome</label>
+          <input type="text" value="${d.nome}" placeholder="Nome do dependente" oninput="setDep(${i},'nome',this.value)">
+        </div>
+        <div class="field"><label>Parentesco</label>
+          <select onchange="setDep(${i},'parentesco',this.value)"><option value="">Selecione…</option>${ptOpts}</select>
+        </div>
+      </div>
+      <div class="field-row-3">
+        <div class="field"><label>Data de nascimento</label>
+          <input type="date" value="${d.dataNasc}" max="${hoje}" onchange="setDep(${i},'dataNasc',this.value)">
+          <div class="age-tag ${idade===null?'hidden':''}" id="age-dep-${i}">${idade!==null?idade+' anos':''}</div>
+        </div>
+        <div class="field"><label>Peso (kg)</label>
+          <input type="number" value="${d.peso}" placeholder="Ex: 60" min="1" max="300" step="0.1"
+            oninput="setDep(${i},'peso',this.value.replace(',','.'))">
+        </div>
+        <div class="field"><label>Altura (cm)</label>
+          <input type="number" value="${d.altura}" placeholder="Ex: 165" min="30" max="250"
+            oninput="setDep(${i},'altura',this.value)">
+        </div>
+      </div>
+      <div id="dep-price-${i}" class="dep-price">${preco > 0 ? fmt(preco) + ' / mês' : ''}</div>
+    </div>`;
+  }).join('');
+}
+
+/* ══════════════════════════════════════════════
+   RESUMO — STEP 4
+══════════════════════════════════════════════ */
+function renderResumo() {
+  const nome    = document.getElementById('nome').value.trim();
+  const faixa   = calcFaixa(calcIdade(document.getElementById('dataNasc').value));
+  const p       = PLANOS[state.planoKey];
+  const vlT     = p.v[faixa] || 0;
+  let total = vlT;
+  let rowsDeps = '';
+  state.deps.forEach((d, i) => {
+    const fD = calcFaixa(calcIdade(d.dataNasc));
+    const vd = fD && p ? p.v[fD] || 0 : 0;
+    total += vd;
+    rowsDeps += `<div class="resumo-row">
+      <span class="rr-label">Dep. ${i+1} — ${d.nome||'—'} (${d.parentesco||'—'}, ${fD?fD+' anos':'—'})</span>
+      <span class="rr-val">${fmt(vd)}</span>
+    </div>`;
+  });
+  document.getElementById('resumo-content').innerHTML = `
+    <div class="resumo-header">
+      <div class="resumo-nome">${nome}</div>
+      <div class="resumo-plano">AMIL · ${p.nome} · ${p.cob}</div>
+      <div class="resumo-total">${fmt(total)} <span>/ mês</span></div>
+    </div>
+    <div class="card">
+      <div class="resumo-row"><span class="rr-label">Titular — ${faixa} anos</span><span class="rr-val">${fmt(vlT)}</span></div>
+      ${rowsDeps}
+      <div class="resumo-row" style="border-top:2px solid var(--navy);margin-top:4px;padding-top:14px">
+        <span class="rr-label" style="font-weight:700;color:var(--navy)">Total mensal</span>
+        <span class="rr-val" style="font-size:18px;color:var(--blue)">${fmt(total)}</span>
+      </div>
+    </div>`;
+}
+
+/* ══════════════════════════════════════════════
+   ENVIO
+══════════════════════════════════════════════ */
+async function enviar() {
+  const btn = document.getElementById('btn-enviar');
+  btn.textContent = 'Enviando…'; btn.disabled = true;
+
+  const nome      = document.getElementById('nome').value.trim();
+  const dataNasc  = document.getElementById('dataNasc').value;
+  const pesoR     = parseFloat(document.getElementById('peso').value);
+  const alturaR   = parseFloat(document.getElementById('altura').value);
+  const idadeT    = calcIdade(dataNasc);
+  const faixaT    = calcFaixa(idadeT);
+  const imcT      = calcIMC(pesoR, alturaR);
+  const p         = PLANOS[state.planoKey];
+  const vlT       = p.v[faixaT] || 0;
+  let total = vlT;
+  state.deps.forEach(d => { const fD = calcFaixa(calcIdade(d.dataNasc)); total += fD && p ? p.v[fD] || 0 : 0; });
+
+  const data = {
+    nome, dataNasc,
+    idadeTitular:    idadeT != null ? String(idadeT) : '',
+    faixaTitular:    faixaT,
+    pesoTitular:     pesoR  ? String(pesoR)   : '',
+    alturaTitular:   alturaR ? String(alturaR) : '',
+    imcTitular:      fmtN(imcT),
+    classImcTitular: classIMC(imcT),
+    plano:           p.nome,
+    cobertura:       p.cob,
+    valorTitular:    fmt(vlT),
+    totalMensal:     fmt(total),
+    qtdDependentes:  state.deps.length,
+  };
+
+  state.deps.forEach((d, i) => {
+    const n = i + 1;
+    const idadeD = calcIdade(d.dataNasc), faixaD = calcFaixa(idadeD);
+    const pesoD  = parseFloat(d.peso) || null, alturaD = parseFloat(d.altura) || null;
+    const imcD   = calcIMC(pesoD, alturaD);
+    const vd     = faixaD && p ? p.v[faixaD] || 0 : 0;
+    data[`dep${n}_nome`]       = d.nome;
+    data[`dep${n}_parentesco`] = d.parentesco;
+    data[`dep${n}_dataNasc`]   = d.dataNasc;
+    data[`dep${n}_idade`]      = idadeD != null ? String(idadeD) : '';
+    data[`dep${n}_faixa`]      = faixaD;
+    data[`dep${n}_peso`]       = pesoD   != null ? String(pesoD)   : '';
+    data[`dep${n}_altura`]     = alturaD != null ? String(alturaD) : '';
+    data[`dep${n}_imc`]        = fmtN(imcD);
+    data[`dep${n}_classImc`]   = classIMC(imcD);
+    data[`dep${n}_valor`]      = vd > 0 ? fmt(vd) : '';
+  });
+
+  fbq('track', 'Lead', { content_name: p.nome, currency: 'BRL' });
+
+  if (SCRIPT_URL === 'COLE_AQUI_A_URL_DO_APPS_SCRIPT') {
+    await new Promise(r => setTimeout(r, 800));
+    showSuccess(); return;
+  }
+  try {
+    await fetch(SCRIPT_URL, { method: 'POST', body: new URLSearchParams({ data: JSON.stringify(data) }) });
+    showSuccess();
+  } catch {
+    btn.textContent = 'Tentar novamente'; btn.disabled = false;
+    alert('Erro ao enviar. Verifique sua conexão e tente novamente.');
+  }
+}
+
+function showSuccess() {
+  ['s1','s2','s3','s4'].forEach(id => document.getElementById(id).classList.add('hidden'));
+  document.getElementById('s-success').classList.remove('hidden');
+  document.querySelectorAll('.step-item').forEach(el => el.classList.add('done'));
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
